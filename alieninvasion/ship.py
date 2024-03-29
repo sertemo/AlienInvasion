@@ -27,14 +27,13 @@ class Ship:
         # Carga la imagen de la nave
         self.image = pygame.image.load('alieninvasion/images/ship.png')
         self.rect = self.image.get_rect()
-        print(type(self.rect.x))
 
         # Coloca inicialmente cada nave en el centro de la parte inferior
         # de la pantalla.
         self.rect.midbottom = self.screen_rect.midbottom
 
         # Guarda un valor decimal para la posición horizontal exacta de la nave
-        self.x: float = float(self.rect.x)
+        self.x = self.rect.x
 
         # Creamos flags de movimiento continuo
         self.moving_right = False
@@ -45,9 +44,9 @@ class Ship:
         de la flag
         """
         # Actualiza el valor x de la nave, no el rect
-        if self.moving_right:
+        if self.moving_right and self.rect.right < self.screen_rect.right:
             self.x += self.settings.ship_speed
-        elif self.moving_left:
+        elif self.moving_left and self.rect.left > 0:
             self.x -= self.settings.ship_speed
 
         # Actualiza el objeto rect de self.x
