@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["sertemo <tejedor.moreno@gmail.com>"]
 readme = "README.md"
+packages = [{include = "alieninvasion"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
