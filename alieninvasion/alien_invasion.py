@@ -6,6 +6,7 @@ import pygame
 
 from alien import Alien
 from bullet import Bullet
+from button import Button
 from game_stats import GameStats
 from settings import Settings
 from ship import Ship
@@ -38,6 +39,16 @@ class AlienInvasion:
         self.bullets: Any = pygame.sprite.Group()
         self.aliens: Any = pygame.sprite.Group()
 
+        # Flag para indicar que el juego está activo
+        self.game_active = False
+
+        # Crea el botón de play
+        self.play_button = Button(
+            self,
+            "Jugar",
+            (self.screen_width // 2, self.screen_height // 2)
+        )
+
         self._create_fleet()
 
     def run_game(self) -> None:
@@ -46,13 +57,16 @@ class AlienInvasion:
         while True:
             # Busca eventos de teclado y ratón
             self._check_events()
-            # Actualiza la posición de la nave
-            self.ship.update()
-            # Actualizamos las balas
-            self._update_bullets()
-            # Actualizamos la posición de los aliens
-            self._update_aliens()
-            # Actualizamos la pantalla
+
+            if self.game_active:
+                # Actualiza la posición de la nave
+                self.ship.update()
+                # Actualizamos las balas
+                self._update_bullets()
+                # Actualizamos la posición de los aliens
+                self._update_aliens()
+                # Actualizamos la pantalla
+
             self._update_screen()
             self.clock.tick(self.settings.fps)
 
@@ -150,20 +164,22 @@ class AlienInvasion:
     def _ship_hit(self) -> None:
         """Responde al impacto de un alien en la nave
         """
+        if self.stats.ships_left > 0:
+            # Disminuye ships_left
+            self.stats.ships_left -= 1
 
-        # Disminuye ships_left
-        self.stats.ships_left -= 1
+            # Se deshace de aliens y balas restantes
+            self.aliens.empty()
+            self.bullets.empty()
 
-        # Se deshace de aliens y balas restantes
-        self.aliens.empty()
-        self.bullets.empty()
+            # Crea una flota nueva y centra la nave
+            self._create_fleet()
+            self.ship.center_ship()
 
-        # Crea una flota nueva y centra la nave
-        self._create_fleet()
-        self.ship.center_ship()
-
-        # Pausa
-        sleep(0.5)
+            # Pausa
+            sleep(0.5)
+        else:
+            self.game_active = False
 
     def _check_aliens_bottom(self) -> None:
         """Comprueba si algún alien ha llegado al fondo de la pantalla
@@ -227,7 +243,19 @@ class AlienInvasion:
         """Actualiza las imágenes en la pantalla y cambia
         a la pantalla nueva
         """
-        self.screen.fill(self.settings.bg_color)
+        # Para color de fondo
+        # self.screen.fill(self.settings.bg_color)
+
+        # Para imágen de fondo
+        # Cargar la imagen de fondo
+        fondo = pygame.image.load(self.settings.bg_color_img).convert()
+        # Redimensionar la imagen para que coincida
+        # con el tamaño de la pantalla
+        fondo = pygame.transform.scale(
+            fondo, (self.screen_width, self.screen_height))
+        # Pintamos la imagen
+        self.screen.blit(fondo, (0, 0))
+
         self.ship.blitme()
         self.aliens.draw(self.screen)
         for bullet in self.bullets.sprites():
