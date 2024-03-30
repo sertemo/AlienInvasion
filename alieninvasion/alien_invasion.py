@@ -3,6 +3,7 @@ from time import sleep
 from typing import Any
 
 import pygame
+from icecream import ic
 
 from alien import Alien
 from bullet import Bullet
@@ -29,6 +30,8 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.screen_width = self.screen.get_rect().width
         self.screen_height = self.screen.get_rect().height
+        self.screen_center = self.screen.get_rect().center
+        ic(self.screen_center)
         # Pantalla con ancho y alto definido en settings
         # self.screen = pygame.display.set_mode(
         #    (self.settings.screen_width, self.settings.screen_height))
@@ -46,7 +49,14 @@ class AlienInvasion:
         self.play_button = Button(
             self,
             "Jugar",
-            (self.screen_width // 2, self.screen_height // 2)
+            self.screen_center,
+        )
+        # Crea un botón de quit
+        self.quit_button = Button(
+            self,
+            "Salir",
+            (self.screen_center[0],
+             self.screen_center[1] + 4 * self.settings.bullet_height)
         )
 
         self._create_fleet()
@@ -80,6 +90,46 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
+                self._check_quit_button(mouse_pos)
+
+    def _check_play_button(self, mouse_pos: tuple[int, int]) -> None:
+        """Inicia el juego cuando el jugador
+        hace clic en play
+
+        Parameters
+        ----------
+        mouse_pos : tuple[int, int]
+            _description_
+        """
+        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        if button_clicked and not self.game_active:
+            # Restablece las estadisticas del juego
+            self.stats.reset_stats()
+            self.game_active = True
+
+            # Se deshace de los aliens y las balas que queda
+            self.aliens.empty()
+            self.bullets.empty()
+
+            # Crea una flota nueva y centra la nave.
+            self._create_fleet()
+            self.ship.center_ship()
+
+    def _check_quit_button(self, mouse_pos: tuple[int, int]) -> None:
+        """Sale dle juego cuando el jugador hace clic
+        en Salir
+
+        Parameters
+        ----------
+        mouse_pos : tuple[int, int]
+            _description_
+        """
+        button_clicked = self.quit_button.rect.collidepoint(mouse_pos)
+        if button_clicked and not self.game_active:
+            sys.exit(0)
 
     def _check_keydown_events(self, event: pygame.event.Event) -> None:
         """Responde a pulsaciones de teclas
@@ -260,6 +310,12 @@ class AlienInvasion:
         self.aliens.draw(self.screen)
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+
+        # Dibuja el botón para jugar si el juego está inactivo
+        if not self.game_active:
+            self.play_button.draw_button()
+            self.quit_button.draw_button()
+
         # Hace visible la ultima pantalla dibujada
         pygame.display.flip()
 

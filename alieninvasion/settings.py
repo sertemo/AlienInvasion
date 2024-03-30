@@ -19,6 +19,10 @@ class Settings:
             )
         self.fps = 60
 
+        # Configuración de los botones
+        self.button_width = 200
+        self.button_height = 80
+
         # Configuración de la nave
         self.ship_speed: int = 8
         self.ship_limit: int = 3
@@ -32,7 +36,7 @@ class Settings:
 
         # Configuración de los aliens
         self.alien_path = Path('alieninvasion/images/alien')
-        self.alien_speed = 2.0
+        self.alien_speed = 10.0
         self.fleet_drop_speed = 20  # velocidad de bajada de la flota
         # Dirección de la flota 1: derecha -1: izquierda
         self.fleet_direction = 1

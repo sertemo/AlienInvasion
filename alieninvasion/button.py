@@ -15,7 +15,7 @@ class Button:
             self,
             ai_game: AlienInvasion,
             msg: str,
-            position: tuple[int ,int],
+            position: tuple[int, int],
             ) -> None:
         """Inicializa los atributos del botón
 
@@ -28,17 +28,18 @@ class Button:
         """
         self.screen = ai_game.screen
         self.screen_rect = self.screen.get_rect()
+        self.settings = ai_game.settings
 
         # Configura las dimensiones y propiedades del botón
-        self.width, self.height = 200, 50
-        self.button_color = (0, 135, 0)
-        self.text_color = (255, 255, 255)
-        self.font: pygame.font.Font = pygame.font.SysFont('Poppins', 48)
+        self.width, self.height = self.settings.button_width, \
+            self.settings.button_height
+        self.button_color = (160, 220, 155)
+        self.text_color = (10, 25, 10)
+        self.font: pygame.font.Font = pygame.font.SysFont('Poppins', 42)
 
         # Crea el objeto rect del botón y lo centra
         self.rect = pygame.Rect(0, 0, self.width, self.height)
-        self.rect.x = position[0]
-        self.rect.y = position[1]
+        self.rect.center = position
 
         # Solo hay que preparar el mensaje del boton 1 vez
         self._prep_msg(msg)
