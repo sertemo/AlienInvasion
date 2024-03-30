@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "alieninvasion"
 version = "0.1.0"
-description = ""
+description = "Juego tipo Space Invaders para aprender pygame"
 authors = ["sertemo <tejedor.moreno@gmail.com>"]
 readme = "README.md"
 packages = [{include = "alieninvasion"}]
