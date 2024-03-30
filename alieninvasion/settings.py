@@ -14,8 +14,8 @@ class Settings:
         self.screen_width = 1200
         self.screen_height = 800
         self.bg_color = (130, 130, 130)
-        self.bg_color_img = Path(
-            'alieninvasion/images/background/background.jpg'
+        self.bg_img_path = Path(
+            'alieninvasion/images/background'
             )
         self.fps = 60
 

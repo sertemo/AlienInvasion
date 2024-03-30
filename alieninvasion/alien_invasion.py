@@ -1,3 +1,5 @@
+from pathlib import Path
+import random
 import sys
 from time import sleep
 from typing import Any
@@ -31,7 +33,8 @@ class AlienInvasion:
         self.screen_width = self.screen.get_rect().width
         self.screen_height = self.screen.get_rect().height
         self.screen_center = self.screen.get_rect().center
-        ic(self.screen_center)
+        self.background = self._load_background()
+        ic(self.screen_center, self.screen_height, self.screen_width)
         # Pantalla con ancho y alto definido en settings
         # self.screen = pygame.display.set_mode(
         #    (self.settings.screen_width, self.settings.screen_height))
@@ -80,6 +83,18 @@ class AlienInvasion:
             self._update_screen()
             self.clock.tick(self.settings.fps)
 
+    def _load_background(self) -> Path:
+        """Devuelve la ruta a un fondo aleatorio
+        de la carpeta fondos
+
+        Returns
+        -------
+        Path
+            _description_
+        """
+        fondos: list[Path] = list(self.settings.bg_img_path.iterdir())
+        return random.choice(fondos)
+
     def _check_events(self) -> None:
         """Responde a pulsaciones de teclas y eventos de ratón
         """
@@ -114,6 +129,8 @@ class AlienInvasion:
             self.aliens.empty()
             self.bullets.empty()
 
+            # Crea un nuevo fondo
+            self.background = self._load_background()
             # Crea una flota nueva y centra la nave.
             self._create_fleet()
             self.ship.center_ship()
@@ -298,7 +315,7 @@ class AlienInvasion:
 
         # Para imágen de fondo
         # Cargar la imagen de fondo
-        fondo = pygame.image.load(self.settings.bg_color_img).convert()
+        fondo = pygame.image.load(self.background).convert()
         # Redimensionar la imagen para que coincida
         # con el tamaño de la pantalla
         fondo = pygame.transform.scale(
