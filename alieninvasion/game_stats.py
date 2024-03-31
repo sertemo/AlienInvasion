@@ -20,7 +20,11 @@ class GameStats:
         self.settings = ai_game.settings
         self.reset_stats()  # Para partida nueva
 
+        # Puntuación record
+        self.high_score = 0
+
     def reset_stats(self) -> None:
         """Inicializa las estadísticas que pueden cambiar durante el juego
         """
         self.ships_left = self.settings.ship_limit
+        self.score = 0

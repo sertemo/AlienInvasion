@@ -35,7 +35,8 @@ class Button:
             self.settings.button_height
         self.button_color = (160, 220, 155)
         self.text_color = (10, 25, 10)
-        self.font: pygame.font.Font = pygame.font.SysFont('Poppins', 42)
+        self.font: pygame.font.Font = pygame.font.SysFont(
+            self.settings.font, 42)
 
         # Crea el objeto rect del botón y lo centra
         self.rect = pygame.Rect(0, 0, self.width, self.height)
