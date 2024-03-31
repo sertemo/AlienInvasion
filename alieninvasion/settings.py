@@ -25,6 +25,7 @@ class Settings:
 
         # Configuración de puntuación
         self.alien_points = 50
+        self.score_color = (180, 255, 180)
 
         # Configuración de los botones
         self.button_width = 200
@@ -34,7 +35,7 @@ class Settings:
         self.ship_limit: int = 3
 
         # Configuración de las balas
-        self.bullet_width = 2000
+        self.bullet_width = 4
         self.bullet_height = 30
         self.bullet_color = (57, 255, 20)
         self.bullets_allowed = 3
@@ -54,9 +55,9 @@ class Settings:
         """Inicializa las configuraciones que cambian
         durante el juego al incrementar dificultad
         """
-        self.ship_speed: float = 10.0
-        self.bullet_speed: float = 15.0
-        self.alien_speed: float = 8.0
+        self.ship_speed: float = 6.5
+        self.bullet_speed: float = 10.0
+        self.alien_speed: float = 7.0
         # Dirección de la flota 1: derecha -1: izquierda
         self.fleet_direction = 1
 

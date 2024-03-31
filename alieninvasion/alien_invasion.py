@@ -15,6 +15,12 @@ from scoreboard import Scoreboard
 from settings import Settings
 from ship import Ship
 
+# TODO : puntuacion mas alta permanente en archivo
+# TODO : hacer que naves disparen
+# TODO : explorar pygame.mixer para sonidos
+# TODO : hacer que caigan bonus que den mejoras
+# TODO : Escalar el tamaño de las naves restantes
+
 
 class AlienInvasion:
     """Clase geenral para gestionar los recursos y el comportamiento
@@ -122,6 +128,8 @@ class AlienInvasion:
         self.stats.reset_stats()
         self.game_active = True
         self.sb.prep_score()
+        self.sb.prep_level()
+        self.sb.prep_ships()
 
         # Se deshace de los aliens y las balas que queda
         self.aliens.empty()
@@ -244,6 +252,9 @@ class AlienInvasion:
             self.settings.increase_speed()
             # Cargamos otro fondo
             self.background = self._load_background()
+            # Aumentamos el nivel
+            self.stats.level += 1
+            self.sb.prep_level()
 
     def _update_aliens(self) -> None:
         """comprueba si la flota está en un borde,
@@ -264,6 +275,8 @@ class AlienInvasion:
         if self.stats.ships_left > 0:
             # Disminuye ships_left
             self.stats.ships_left -= 1
+            # Actualiza el marcador
+            self.sb.prep_ships()
 
             # Se deshace de aliens y balas restantes
             self.aliens.empty()

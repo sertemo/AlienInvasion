@@ -2,12 +2,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pygame
+from pygame.sprite import Sprite
 
 if TYPE_CHECKING:  # Para evitar la dependencia circular. Siempre es False
     from alien_invasion import AlienInvasion
 
 
-class Ship:
+class Ship(Sprite):
     """Una clase para gestionar la nave.
     """
 
@@ -20,6 +21,7 @@ class Ship:
         ai_game : AlienInvasion
             _description_
         """
+        super().__init__()
         self.screen = ai_game.screen
         self.settings = ai_game.settings
         self.screen_rect = ai_game.screen.get_rect()
