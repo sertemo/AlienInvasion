@@ -48,11 +48,9 @@ class Alien(Sprite):
         """Devuelve True si el alienigena está en el borde
         de la pantalla"""
         screen_rect = self.screen.get_rect()
-        return (self.rect.right >= screen_rect.right) or \
-            (self.rect.left <= 0)
+        return (self.rect.right >= screen_rect.right) or (self.rect.left <= 0)
 
     def update(self) -> None:
-        """Mueve el alien a la derecha
-        """
+        """Mueve el alien a la derecha"""
         self.x += self.settings.alien_speed * self.settings.fleet_direction
         self.rect.x = self.x

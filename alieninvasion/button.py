@@ -8,15 +8,14 @@ if TYPE_CHECKING:  # Para evitar la dependencia circular. Siempre es False
 
 
 class Button:
-    """Una clase para crear botones para el juego
-    """
+    """Una clase para crear botones para el juego"""
 
     def __init__(
-            self,
-            ai_game: AlienInvasion,
-            msg: str,
-            position: tuple[int, int],
-            ) -> None:
+        self,
+        ai_game: AlienInvasion,
+        msg: str,
+        position: tuple[int, int],
+    ) -> None:
         """Inicializa los atributos del botón
 
         Parameters
@@ -31,12 +30,13 @@ class Button:
         self.settings = ai_game.settings
 
         # Configura las dimensiones y propiedades del botón
-        self.width, self.height = self.settings.button_width, \
-            self.settings.button_height
+        self.width, self.height = (
+            self.settings.button_width,
+            self.settings.button_height,
+        )
         self.button_color = (160, 220, 155)
         self.text_color = (10, 25, 10)
-        self.font: pygame.font.Font = pygame.font.SysFont(
-            self.settings.font, 42)
+        self.font: pygame.font.Font = pygame.font.SysFont(self.settings.font, 42)
 
         # Crea el objeto rect del botón y lo centra
         self.rect = pygame.Rect(0, 0, self.width, self.height)
@@ -54,14 +54,11 @@ class Button:
         msg : str
             _description_
         """
-        self.msg_image = self.font.render(
-            msg, True, self.text_color,
-            self.button_color)
+        self.msg_image = self.font.render(msg, True, self.text_color, self.button_color)
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.rect.center
 
     def draw_button(self) -> None:
-        """Dibuja un boton en blanco y luego el mensaje
-        """
+        """Dibuja un boton en blanco y luego el mensaje"""
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)

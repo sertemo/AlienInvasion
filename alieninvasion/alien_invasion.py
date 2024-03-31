@@ -5,6 +5,7 @@ from time import sleep
 from typing import Any
 
 import pygame
+
 # from icecream import ic
 
 from alien import Alien
@@ -28,8 +29,7 @@ class AlienInvasion:
     """
 
     def __init__(self) -> None:
-        """Inicializa el juego y crea recursos
-        """
+        """Inicializa el juego y crea recursos"""
         pygame.init()
         self.clock = pygame.time.Clock()
         # Color de fondo
@@ -69,15 +69,16 @@ class AlienInvasion:
         self.quit_button = Button(
             self,
             "Salir",
-            (self.screen_center[0],
-             self.screen_center[1] + 4 * self.settings.bullet_height)
+            (
+                self.screen_center[0],
+                self.screen_center[1] + 4 * self.settings.bullet_height,
+            ),
         )
 
         self._create_fleet()
 
     def run_game(self) -> None:
-        """Inicia el bucle principal del juego
-        """
+        """Inicia el bucle principal del juego"""
         while True:
             # Busca eventos de teclado y ratón
             self._check_events()
@@ -107,8 +108,7 @@ class AlienInvasion:
         return random.choice(fondos)
 
     def _check_events(self) -> None:
-        """Responde a pulsaciones de teclas y eventos de ratón
-        """
+        """Responde a pulsaciones de teclas y eventos de ratón"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit(0)
@@ -122,8 +122,7 @@ class AlienInvasion:
                 self._check_quit_button(mouse_pos)
 
     def _start_game(self) -> None:
-        """Inicia el juego
-        """
+        """Inicia el juego"""
         # Restablece las estadisticas del juego
         self.stats.reset_stats()
         self.game_active = True
@@ -197,8 +196,7 @@ class AlienInvasion:
             self._start_game()
 
     def _fire_bullet(self) -> None:
-        """Crea una nueva bala y la añade al grupo de balas
-        """
+        """Crea una nueva bala y la añade al grupo de balas"""
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
@@ -217,8 +215,7 @@ class AlienInvasion:
             self.ship.moving_left = False
 
     def _update_bullets(self) -> None:
-        """Actualiza la posición de las balas y se deshace de las viejas
-        """
+        """Actualiza la posición de las balas y se deshace de las viejas"""
         self.bullets.update()
 
         # Se deshace de las balas que han desaparecido
@@ -231,12 +228,9 @@ class AlienInvasion:
         self._check_bullet_alien_collisions()
 
     def _check_bullet_alien_collisions(self) -> None:
-        """Responde a las colisiones bala-alien
-        """
+        """Responde a las colisiones bala-alien"""
         # Retira las balas y aliens que han chocado
-        collisions = pygame.sprite.groupcollide(
-            self.bullets, self.aliens, True, True
-        )
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
         if collisions:
             for aliens in collisions.values():
@@ -270,8 +264,7 @@ class AlienInvasion:
         self._check_aliens_bottom()
 
     def _ship_hit(self) -> None:
-        """Responde al impacto de un alien en la nave
-        """
+        """Responde al impacto de un alien en la nave"""
         if self.stats.ships_left > 0:
             # Disminuye ships_left
             self.stats.ships_left -= 1
@@ -294,8 +287,7 @@ class AlienInvasion:
             pygame.mouse.set_visible(True)
 
     def _check_aliens_bottom(self) -> None:
-        """Comprueba si algún alien ha llegado al fondo de la pantalla
-        """
+        """Comprueba si algún alien ha llegado al fondo de la pantalla"""
         for alien in self.aliens.sprites():
             if alien.rect.bottom >= self.screen_height:
                 # Trata esto como si la nave hubiese sido alcanzada
@@ -303,23 +295,20 @@ class AlienInvasion:
                 break
 
     def _check_fleet_edges(self) -> None:
-        """Responde adecuadamente si algún alien ha llegado al borde
-        """
+        """Responde adecuadamente si algún alien ha llegado al borde"""
         for alien in self.aliens.sprites():
             if alien.check_edges():
                 self._change_fleet_direction()
                 break
 
     def _change_fleet_direction(self) -> None:
-        """Baja toda la flota y cambia su dirección
-        """
+        """Baja toda la flota y cambia su dirección"""
         for alien in self.aliens.sprites():
             alien.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= -1
 
     def _create_fleet(self) -> None:
-        """Crea una flota de aliens.
-        """
+        """Crea una flota de aliens."""
         # Hace un alien y sigue añadiendo hasta que no queda espacio
         # El espaciado entren alienigenas es de un alien de ancho
         # y otro de alto
@@ -363,8 +352,7 @@ class AlienInvasion:
         fondo = pygame.image.load(self.background).convert()
         # Redimensionar la imagen para que coincida
         # con el tamaño de la pantalla
-        fondo = pygame.transform.scale(
-            fondo, (self.screen_width, self.screen_height))
+        fondo = pygame.transform.scale(fondo, (self.screen_width, self.screen_height))
         # Pintamos la imagen
         self.screen.blit(fondo, (0, 0))
 
@@ -385,7 +373,7 @@ class AlienInvasion:
         pygame.display.flip()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     ai = AlienInvasion()
     ai.run_game()

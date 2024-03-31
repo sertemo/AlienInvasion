@@ -9,8 +9,7 @@ if TYPE_CHECKING:  # Para evitar la dependencia circular. Siempre es False
 
 
 class Ship(Sprite):
-    """Una clase para gestionar la nave.
-    """
+    """Una clase para gestionar la nave."""
 
     def __init__(self, ai_game: AlienInvasion) -> None:
         """Inicializa la nave y configura su posición
@@ -27,7 +26,7 @@ class Ship(Sprite):
         self.screen_rect = ai_game.screen.get_rect()
 
         # Carga la imagen de la nave
-        self.image = pygame.image.load('alieninvasion/images/ship.png')
+        self.image = pygame.image.load("alieninvasion/images/ship.png")
         self.rect = self.image.get_rect()
 
         # Coloca inicialmente cada nave en el centro de la parte inferior
@@ -55,12 +54,10 @@ class Ship(Sprite):
         self.rect.x = self.x
 
     def center_ship(self) -> None:
-        """Centra la nave en la pantalla.
-        """
+        """Centra la nave en la pantalla."""
         self.rect.midbottom = self.screen_rect.midbottom
         self.x = self.rect.x
 
     def blitme(self) -> None:
-        """Dibuja la nave en la ubicación actual
-        """
+        """Dibuja la nave en la ubicación actual"""
         self.screen.blit(self.image, self.rect)

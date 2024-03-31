@@ -7,20 +7,15 @@ class Settings:
     """
 
     def __init__(self) -> None:
-        """Inicializa la configuración del juego
-        """
+        """Inicializa la configuración del juego"""
         # Configuraciones estáticas
-        self.font = 'Poppins'
+        self.font = "Poppins"
         # Configuración de la pantalla
         self.screen_width = 1200
         self.screen_height = 800
         self.bg_color = (130, 130, 130)
-        self.bg_img_path = Path(
-            'alieninvasion/images/background'
-            )
-        self.start_background = Path(
-            'alieninvasion/images/start_background.png'
-        )
+        self.bg_img_path = Path("alieninvasion/images/background")
+        self.start_background = Path("alieninvasion/images/start_background.png")
         self.fps = 60
 
         # Configuración de puntuación
@@ -41,7 +36,7 @@ class Settings:
         self.bullets_allowed = 3
 
         # Configuración de los aliens
-        self.alien_path = Path('alieninvasion/images/alien')
+        self.alien_path = Path("alieninvasion/images/alien")
         self.fleet_drop_speed = 12  # velocidad de bajada de la flota
 
         # Rapidez con la que se acelera el juego

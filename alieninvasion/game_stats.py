@@ -6,8 +6,7 @@ if TYPE_CHECKING:  # Para evitar la dependencia circular. Siempre es False
 
 
 class GameStats:
-    """Sigue las estadísticas de Alien Invasion
-    """
+    """Sigue las estadísticas de Alien Invasion"""
 
     def __init__(self, ai_game: AlienInvasion) -> None:
         """Inicializa las estadísticas
@@ -24,8 +23,7 @@ class GameStats:
         self.high_score = 0
 
     def reset_stats(self) -> None:
-        """Inicializa las estadísticas que pueden cambiar durante el juego
-        """
+        """Inicializa las estadísticas que pueden cambiar durante el juego"""
         self.ships_left = self.settings.ship_limit
         self.score = 0
         self.level = 1
