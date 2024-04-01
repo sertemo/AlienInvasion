@@ -16,11 +16,10 @@ from scoreboard import Scoreboard
 from settings import Settings
 from ship import Ship
 
-# TODO : puntuacion mas alta permanente en archivo
-# TODO : hacer que naves disparen
+# TODO : hacer que naves disparen a partir de cierto nivel
 # TODO : explorar pygame.mixer para sonidos
 # TODO : hacer que caigan bonus que den mejoras
-# TODO : Escalar el tamaño de las naves restantes
+# TODO : Cargar más fondos
 
 
 class AlienInvasion:
@@ -159,6 +158,30 @@ class AlienInvasion:
         if button_clicked and not self.game_active:
             self._start_game()
 
+    def game_over(self) -> None:
+        """Muestra un mensaje de Game Over en la pantalla
+        cuando se acaban las vidas
+        """
+        game_over_msg = "Game Over"
+        font = pygame.font.SysFont(self.settings.font, 150)
+        game_over_image = font.render(
+            game_over_msg, True, self.settings.game_over_color
+        )
+
+        # Centra la puntuación en la parte superior de la pantalla
+        game_over_rect = game_over_image.get_rect()
+        game_over_rect.centerx = self.screen_width // 2
+        game_over_rect.top = 280
+
+        # Muestra el texto
+        self.screen.blit(game_over_image, game_over_rect)
+
+    def _exit_game(self) -> None:
+        """Guarda el high score en db y cierra el juego"""
+        # Guardamos el highscore
+        self.stats.save_highscore()
+        sys.exit(0)
+
     def _check_quit_button(self, mouse_pos: tuple[int, int]) -> None:
         """Sale dle juego cuando el jugador hace clic
         en Salir
@@ -170,7 +193,7 @@ class AlienInvasion:
         """
         button_clicked = self.quit_button.rect.collidepoint(mouse_pos)
         if button_clicked and not self.game_active:
-            sys.exit(0)
+            self._exit_game()
 
     def _check_keydown_events(self, event: pygame.event.Event) -> None:
         """Responde a pulsaciones de teclas
@@ -190,7 +213,7 @@ class AlienInvasion:
             self._fire_bullet()
         # Salimos del juego con la tecla q
         elif event.key == pygame.K_q:
-            sys.exit()
+            self._exit_game()
         # Iniciamos el juego con la tecla J
         elif event.key == pygame.K_j and not self.game_active:
             self._start_game()
@@ -368,6 +391,9 @@ class AlienInvasion:
         if not self.game_active:
             self.play_button.draw_button()
             self.quit_button.draw_button()
+            # Si no quedan vidas mostramos Game Over
+            if self.stats.ships_left == 0:
+                self.game_over()
 
         # Hace visible la ultima pantalla dibujada
         pygame.display.flip()

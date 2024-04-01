@@ -42,6 +42,20 @@ class Scoreboard:
         self.ships: Any = Group()
         for ship_number in range(self.stats.ships_left):
             ship = Ship(self.ai_game)
+            original_image = ship.image  # La imagen original de la nave
+
+            # Escalando la imagen a las nuevas dimensiones
+            # Por ejemplo, reducir a la mitad el tamaño de la imagen original
+            new_width = ship.rect.width // 2
+            new_height = ship.rect.height // 2
+            scaled_image = pygame.transform.scale(
+                original_image, (new_width, new_height)
+            )
+
+            # Actualizar la imagen y el rectángulo del objeto Ship
+            # con la nueva imagen escalada
+            ship.image = scaled_image
+            ship.rect = scaled_image.get_rect()
             ship.rect.x = 10 + ship_number * ship.rect.width
             ship.rect.y = 10
             self.ships.add(ship)

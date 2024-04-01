@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
+from icecream import ic
+
 if TYPE_CHECKING:  # Para evitar la dependencia circular. Siempre es False
     from alien_invasion import AlienInvasion
 
@@ -19,8 +21,14 @@ class GameStats:
         self.settings = ai_game.settings
         self.reset_stats()  # Para partida nueva
 
-        # Puntuación record
-        self.high_score = 0
+        # Cargamos Puntuación record del archivo en db
+        self.high_score = int(self.settings.high_score_path.read_text())
+
+    def save_highscore(self) -> None:
+        """Guarda en archivo el highscore"""
+        ic(self.high_score, type(self.high_score))
+        high_score_str = str(self.high_score)
+        self.settings.high_score_path.write_text(high_score_str)
 
     def reset_stats(self) -> None:
         """Inicializa las estadísticas que pueden cambiar durante el juego"""

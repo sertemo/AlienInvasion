@@ -6,8 +6,14 @@ RED='\033[0;31m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # Sin color
 
-# Define la variable project_path con el path de tu proyecto
-project_path="alieninvasion/"
+# Revisa si se proporcionó un argumento
+if [ "$#" -ne 1 ]; then
+    echo -e "${RED}Error: Debes proporcionar la ruta del proyecto como argumento.${NC}"
+    exit 1
+fi
+
+# Usa el primer argumento como la ruta del proyecto
+project_path="$1"
 
 echo -e "${YELLOW}Ejecutando Black...${NC}"
 poetry run black "$project_path"

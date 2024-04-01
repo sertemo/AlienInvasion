@@ -21,13 +21,15 @@ class Settings:
         # Configuración de puntuación
         self.alien_points = 50
         self.score_color = (180, 255, 180)
+        self.game_over_color = (255, 255, 250)
+        self.high_score_path = Path("db/HighScore.txt")
 
         # Configuración de los botones
         self.button_width = 200
         self.button_height = 80
 
         # Configuración de la nave
-        self.ship_limit: int = 3
+        self.ship_limit: int = 1
 
         # Configuración de las balas
         self.bullet_width = 4
@@ -52,7 +54,7 @@ class Settings:
         """
         self.ship_speed: float = 6.5
         self.bullet_speed: float = 10.0
-        self.alien_speed: float = 7.0
+        self.alien_speed: float = 27.0
         # Dirección de la flota 1: derecha -1: izquierda
         self.fleet_direction = 1
 
