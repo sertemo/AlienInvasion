@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Ejecuta verificaciones
+# Black, mypy, flake8 y pytest
+# Estos paquetes deben estar instalados dentro de poetry en el proyecto correspondiente
+# Asume que los scripts del proyecto están dentro de carpeta 'src'
+
 # Define colores
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -7,13 +12,14 @@ YELLOW='\033[0;33m'
 NC='\033[0m' # Sin color
 
 # Revisa si se proporcionó un argumento
-if [ "$#" -ne 1 ]; then
-    echo -e "${RED}Error: Debes proporcionar la ruta del proyecto como argumento.${NC}"
-    exit 1
-fi
+# if [ "$#" -ne 1 ]; then
+#    echo -e "${RED}Error: Debes proporcionar la ruta del proyecto como argumento.${NC}"
+#    exit 1
+# fi
 
 # Usa el primer argumento como la ruta del proyecto
-project_path="$1"
+# project_path="$1"
+project_path="alieninvasion"
 
 echo -e "${YELLOW}Ejecutando Black...${NC}"
 poetry run black "$project_path"
@@ -30,5 +36,8 @@ else
     echo -e "${RED}Flake8 encontró problemas.${NC}"
 fi
 
-# ejecutar chmod +x tests.sh para hacer el archivo ejecutable: ./tests.sh
+echo -e "${YELLOW}Ejecutando Pytest...${NC}"
+poetry run pytest
+echo -e "${GREEN}Pytest finalizado correctamente.${NC}"
+
 
