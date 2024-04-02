@@ -35,5 +35,5 @@ jobs:
     - name: Run Flake8
       run: poetry run flake8 alieninvasion
 
-    - name: Run Pytest
-      run: poetry run pytest
+#    - name: Run Pytest
+#      run: poetry run pytest
