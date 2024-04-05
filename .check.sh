@@ -22,15 +22,15 @@ NC='\033[0m' # Sin color
 project_path="alieninvasion"
 
 echo -e "${YELLOW}Ejecutando Black...${NC}"
-poetry run black "$project_path"
+poetry run black .
 echo -e "${GREEN}Black finalizado correctamente.${NC}"
 
 echo -e "${YELLOW}Ejecutando MyPy...${NC}"
-poetry run mypy "$project_path"
+poetry run mypy .
 echo -e "${GREEN}MyPy finalizado correctamente.${NC}"
 
 echo -e "${YELLOW}Ejecutando Flake8...${NC}"
-if poetry run flake8 "$project_path"; then
+if poetry run flake8 .; then
     echo -e "${GREEN}Flake8 finalizado correctamente. No se encontraron problemas.${NC}"
 else
     echo -e "${RED}Flake8 encontró problemas.${NC}"

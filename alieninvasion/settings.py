@@ -35,6 +35,7 @@ class Settings:
         self.bullet_width = 4
         self.bullet_height = 30
         self.bullet_color = (57, 255, 20)
+        self.bullet_color_alien = (255, 10, 24)
         self.bullets_allowed = 3
 
         # Configuración de los aliens
@@ -54,7 +55,9 @@ class Settings:
         """
         self.ship_speed: float = 6.5
         self.bullet_speed: float = 10.0
+        self.bullet_alien_speed: float = 9.0
         self.alien_speed: float = 7.0
+        self.alien_fire_rate = 0.5
         # Dirección de la flota 1: derecha -1: izquierda
         self.fleet_direction = 1
 

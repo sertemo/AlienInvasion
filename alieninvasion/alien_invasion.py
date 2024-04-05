@@ -16,7 +16,6 @@ from scoreboard import Scoreboard
 from settings import Settings
 from ship import Ship
 
-# TODO : hacer que naves disparen a partir de cierto nivel
 # TODO : explorar pygame.mixer para sonidos
 # TODO : hacer que caigan bonus que den mejoras
 # TODO : Cargar más fondos
@@ -53,7 +52,14 @@ class AlienInvasion:
         # Crea los elementos del juego
         self.ship = Ship(self)
         self.bullets: Any = pygame.sprite.Group()
+        self.alien_bullets: Any = pygame.sprite.Group()
         self.aliens: Any = pygame.sprite.Group()
+
+        # Creamos el evento periódico de disparo de balas
+        # De los aliens
+        self.SHOOT_EVENT = pygame.USEREVENT + 1
+        # Cada 5 s
+        pygame.time.set_timer(self.SHOOT_EVENT, 1000)
 
         # Flag para indicar que el juego está activo
         self.game_active = False
@@ -89,8 +95,8 @@ class AlienInvasion:
                 self._update_bullets()
                 # Actualizamos la posición de los aliens
                 self._update_aliens()
-                # Actualizamos la pantalla
 
+            # Actualizamos la pantalla
             self._update_screen()
             self.clock.tick(self.settings.fps)
 
@@ -119,6 +125,10 @@ class AlienInvasion:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
                 self._check_quit_button(mouse_pos)
+            elif (event.type == self.SHOOT_EVENT) and self.game_active:
+                # Alien dispara balas
+                if random.random() < self.settings.alien_fire_rate:
+                    self._alien_fire_bullet()
 
     def _start_game(self) -> None:
         """Inicia el juego"""
@@ -224,6 +234,13 @@ class AlienInvasion:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
 
+    def _alien_fire_bullet(self) -> None:
+        """Simula el disparo de un alien. Crea una nueva
+        bala de tipo alien
+        """
+        new_bullet = Bullet(self, type="alien")
+        self.alien_bullets.add(new_bullet)
+
     def _check_keyup_events(self, event: pygame.event.Event) -> None:
         """Responde a liberaciones de teclas
 
@@ -238,17 +255,26 @@ class AlienInvasion:
             self.ship.moving_left = False
 
     def _update_bullets(self) -> None:
-        """Actualiza la posición de las balas y se deshace de las viejas"""
+        """Actualiza la posición de todas las balas
+        y se deshace de las viejas"""
         self.bullets.update()
+        self.alien_bullets.update()
 
         # Se deshace de las balas que han desaparecido
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+        for alien_bullet in self.alien_bullets.copy():
+            if alien_bullet.rect.top >= self.screen_height:
+                self.alien_bullets.remove(alien_bullet)
+
         # Busca balas que hayan dado a un alien
         # Si hay se deshace de la bala y el alien
         self._check_bullet_alien_collisions()
+
+        # Comprueba si alguna bala ha dado a la nave
+        self._check_alien_bullet_ship_collisions()
 
     def _check_bullet_alien_collisions(self) -> None:
         """Responde a las colisiones bala-alien"""
@@ -285,6 +311,15 @@ class AlienInvasion:
 
         # Busca aliens llegando al fondo de la pantalla
         self._check_aliens_bottom()
+
+    def _check_alien_bullet_ship_collisions(self) -> None:
+        """Response a las colisiones de las balas
+        de los aliens con la nave
+        """
+        collisions = pygame.sprite.spritecollide(self.ship, self.alien_bullets, True)
+
+        if collisions:
+            self._ship_hit()
 
     def _ship_hit(self) -> None:
         """Responde al impacto de un alien en la nave"""
@@ -339,7 +374,7 @@ class AlienInvasion:
         alien_width, alien_height = alien.rect.size
 
         current_x, current_y = alien_width, alien_height
-        while current_y < (self.screen_height - 4 * alien_height):
+        while current_y < (self.screen_height - 5 * alien_height):
             while current_x < (self.screen_width - 2 * alien_width):
                 self._create_alien(current_x, current_y)
                 current_x += 2 * alien_width
@@ -381,8 +416,12 @@ class AlienInvasion:
 
         self.ship.blitme()
         self.aliens.draw(self.screen)
+        # Dibujamos balas de la nave
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+        # Dibujamos balas de los aliens
+        for alien_bullet in self.alien_bullets.sprites():
+            alien_bullet.draw_bullet()
 
         # Dibuja la información de la puntuación
         self.sb.show_score()
