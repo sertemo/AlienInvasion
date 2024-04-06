@@ -9,6 +9,7 @@ import pygame
 # from icecream import ic
 
 from alien import Alien
+from bonus import Bonus
 from bullet import Bullet
 from button import Button
 from game_stats import GameStats
@@ -54,12 +55,17 @@ class AlienInvasion:
         self.bullets: Any = pygame.sprite.Group()
         self.alien_bullets: Any = pygame.sprite.Group()
         self.aliens: Any = pygame.sprite.Group()
+        self.bonuses: Any = pygame.sprite.Group()
 
         # Creamos el evento periódico de disparo de balas
         # De los aliens
         self.SHOOT_EVENT = pygame.USEREVENT + 1
         # Cada 5 s
         pygame.time.set_timer(self.SHOOT_EVENT, 1000)
+
+        # Creamos el evento de los Bonus
+        self.FALL_EVENT = pygame.USEREVENT + 2
+        pygame.time.set_timer(self.FALL_EVENT, 5000)  # TODO: encontrar el correcto
 
         # Flag para indicar que el juego está activo
         self.game_active = False
@@ -126,9 +132,11 @@ class AlienInvasion:
                 self._check_play_button(mouse_pos)
                 self._check_quit_button(mouse_pos)
             elif (event.type == self.SHOOT_EVENT) and self.game_active:
-                # Alien dispara balas
+                # Alien dispara balas con cierta probabilidad
                 if random.random() < self.settings.alien_fire_rate:
                     self._alien_fire_bullet()
+            elif (event.type == self.SHOOT_EVENT) and self.game_active:
+                self._create_bonus()
 
     def _start_game(self) -> None:
         """Inicia el juego"""
@@ -241,6 +249,11 @@ class AlienInvasion:
         new_bullet = Bullet(self, type="alien")
         self.alien_bullets.add(new_bullet)
 
+    def _create_bonus(self) -> None:
+        """Crea un nuevo bonus"""
+        new_bonus = Bonus(self, type="speed")
+        self.bonuses.add(new_bonus)
+
     def _check_keyup_events(self, event: pygame.event.Event) -> None:
         """Responde a liberaciones de teclas
 
@@ -291,6 +304,8 @@ class AlienInvasion:
             # Subimos de nivel
             # Destruye las balas existentes y crea una flota nueva.
             self.bullets.empty()
+            self.alien_bullets.empty()
+
             self._create_fleet()
             self.settings.increase_speed()
             # Cargamos otro fondo

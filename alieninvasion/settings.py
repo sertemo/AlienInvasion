@@ -42,6 +42,10 @@ class Settings:
         self.alien_path = Path("alieninvasion/images/alien")
         self.fleet_drop_speed = 12  # velocidad de bajada de la flota
 
+        # Configuración de los Bonus
+        self.bonus_path = Path("alieninvasion/images/bonus")
+        self.bonus_speed: float = 13
+
         # Rapidez con la que se acelera el juego
         self.speedup_scale = 1.2
         # Lo rápido que aumentan los puntos conseguidos
