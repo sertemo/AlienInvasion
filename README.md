@@ -10,13 +10,13 @@ Proyecto del libro **Curso intensivo de Python** para crear un juego tipo Space 
 ## Juego
 ![alt text](<alieninvasion/images/alieninvasion.png>)
 
+## Updates
+- 06/04/2024
+    - Los aliens disparan con una cadencia configurable que aumenta con el nivel de juego
+    - Caen bonus cada cierto tiempo con mejoras para la nave
+    - Se aplican mejoras de velocidad de número de balas máximas y de vida extra
+
 ## Posibles Mejoras
-- Implementar un bonus que caiga periódicamente (c/ 40s) aleatorio y que otorgue mejoras y la nave es capaz de
-impactar con ello. Las posibles mejoras pueden ser: 
-    - Balas más grandes
-    - Una vida más
-    - velocidad durante un periodo de tiempo
-    - etc.
+- Hacer seguimiento de los bonuses adquiridos y del tipo en stats
 - Implementar sonidos
-- Implementar disparios de los aliens
 - Implementar animación de explosión cuando se derriba una nave enemiga

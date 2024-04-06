@@ -35,3 +35,4 @@ class GameStats:
         self.ships_left = self.settings.ship_limit
         self.score = 0
         self.level = 1
+        self.bonus_stats = {"extra_speed": 0, "extra_bullets": 0, "extra_life": 0}

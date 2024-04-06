@@ -2,11 +2,11 @@ from pathlib import Path
 import random
 import sys
 from time import sleep
-from typing import Any
+from typing import Any, Union
 
 import pygame
 
-# from icecream import ic
+from icecream import ic
 
 from alien import Alien
 from bonus import Bonus
@@ -18,7 +18,6 @@ from settings import Settings
 from ship import Ship
 
 # TODO : explorar pygame.mixer para sonidos
-# TODO : hacer que caigan bonus que den mejoras
 # TODO : Cargar más fondos
 
 
@@ -65,7 +64,9 @@ class AlienInvasion:
 
         # Creamos el evento de los Bonus
         self.FALL_EVENT = pygame.USEREVENT + 2
-        pygame.time.set_timer(self.FALL_EVENT, 5000)  # TODO: encontrar el correcto
+        pygame.time.set_timer(self.FALL_EVENT, self.settings.bonus_rate)
+        self.SPEED_BONUS_EVENT: Union[None, int] = None
+        self.BULLET_BONUS_EVENT: Union[None, int] = None
 
         # Flag para indicar que el juego está activo
         self.game_active = False
@@ -101,6 +102,8 @@ class AlienInvasion:
                 self._update_bullets()
                 # Actualizamos la posición de los aliens
                 self._update_aliens()
+                # Actualiza la posición de los bonus
+                self._update_bonus()
 
             # Actualizamos la pantalla
             self._update_screen()
@@ -135,8 +138,14 @@ class AlienInvasion:
                 # Alien dispara balas con cierta probabilidad
                 if random.random() < self.settings.alien_fire_rate:
                     self._alien_fire_bullet()
-            elif (event.type == self.SHOOT_EVENT) and self.game_active:
+            elif (event.type == self.FALL_EVENT) and self.game_active:
                 self._create_bonus()
+            elif (event.type == self.BULLET_BONUS_EVENT) and self.game_active:
+                # Revertimos el efecto del bono de las balas
+                self.end_bonus_bullets()
+            elif (event.type == self.SPEED_BONUS_EVENT) and self.game_active:
+                # Revertimos el efecto del bono de las balas
+                self.end_bonus_speed()
 
     def _start_game(self) -> None:
         """Inicia el juego"""
@@ -250,8 +259,10 @@ class AlienInvasion:
         self.alien_bullets.add(new_bullet)
 
     def _create_bonus(self) -> None:
-        """Crea un nuevo bonus"""
-        new_bonus = Bonus(self, type="speed")
+        """Crea un nuevo bonus de forma aleatoria"""
+        # TODO El bono de extra vida debería tener una probabilidad muy baja
+        bonus_type = random.choice(self.settings.bonus_type_list)
+        new_bonus = Bonus(self, type=bonus_type)
         self.bonuses.add(new_bonus)
 
     def _check_keyup_events(self, event: pygame.event.Event) -> None:
@@ -305,6 +316,7 @@ class AlienInvasion:
             # Destruye las balas existentes y crea una flota nueva.
             self.bullets.empty()
             self.alien_bullets.empty()
+            self.bonuses.empty()
 
             self._create_fleet()
             self.settings.increase_speed()
@@ -323,9 +335,69 @@ class AlienInvasion:
         # Busca colisiones alien-nave
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self._ship_hit()
-
         # Busca aliens llegando al fondo de la pantalla
         self._check_aliens_bottom()
+
+    def _update_bonus(self) -> None:
+        """Actualiza la posición de los bonus. Hacia abajo"""
+        self.bonuses.update()
+
+        # Comprueba si ha habido colsion con la nave
+        self._check_bonus_ship_collision()
+
+    def _check_bonus_ship_collision(self) -> None:
+        """Responde a la colisión de la nave con el bonus"""
+        collisions = pygame.sprite.spritecollide(self.ship, self.bonuses, True)
+
+        if collisions:
+            # Sacamos el tipo de bonus que hemos cogido
+            bonus_type = collisions[0].type
+            # Se lo pasamos a la función para gestionar los bonus
+            self.apply_bonus(bonus_type)
+
+    def apply_bonus(self, bonus_type: str) -> None:
+        """Gestiona las mejores del bono en el jugador
+        cuando la nave recoge el bono
+        """
+
+        # Creamos un evento de bono en función del tipo
+        ic(f"Aplicado bono tipo {bonus_type}")
+        if bonus_type == "extra_bullets":
+            self.BULLET_BONUS_EVENT = pygame.USEREVENT + 10
+            pygame.time.set_timer(
+                self.BULLET_BONUS_EVENT, 10_000, True
+            )  # True dura solo 1 vez
+            # Aplicamos la mejora
+            self._apply_extra_bullets()
+        elif bonus_type == "extra_speed":
+            self.SPEED_BONUS_EVENT = pygame.USEREVENT + 11
+            pygame.time.set_timer(self.SPEED_BONUS_EVENT, 5000, True)
+            # Aplicamos la mejora
+            self._apply_extra_speed()
+        elif bonus_type == "extra_life":
+            self._apply_extra_life()
+
+    def _apply_extra_speed(self) -> None:
+        """Aplica el aumento de velocidad de la nave"""
+        self.settings.ship_speed += self.settings.extra_speed
+
+    def _apply_extra_bullets(self) -> None:
+        """Aumenta el número de balas permitidas"""
+        self.settings.bullets_allowed += self.settings.extra_bullets
+
+    def _apply_extra_life(self) -> None:
+        """Aumenta el número de naves"""
+        self.stats.ships_left += 1
+        # Actualizamos el marcador
+        self.sb.prep_ships()
+
+    def end_bonus_bullets(self) -> None:
+        """Revierte las mejores aplicadas con el bonus de las balas"""
+        self.settings.bullets_allowed -= self.settings.extra_bullets
+
+    def end_bonus_speed(self) -> None:
+        """Revierte las mejores aplicadas con el bonus de las balas"""
+        self.settings.ship_speed -= self.settings.extra_speed
 
     def _check_alien_bullet_ship_collisions(self) -> None:
         """Response a las colisiones de las balas
@@ -347,6 +419,8 @@ class AlienInvasion:
             # Se deshace de aliens y balas restantes
             self.aliens.empty()
             self.bullets.empty()
+            self.alien_bullets.empty()
+            self.bonuses.empty()
 
             # Crea una flota nueva y centra la nave
             self._create_fleet()
@@ -437,6 +511,8 @@ class AlienInvasion:
         # Dibujamos balas de los aliens
         for alien_bullet in self.alien_bullets.sprites():
             alien_bullet.draw_bullet()
+        # Dibujamos bonus
+        self.bonuses.draw(self.screen)
 
         # Dibuja la información de la puntuación
         self.sb.show_score()
