@@ -15,8 +15,9 @@ Proyecto del libro **Curso intensivo de Python** para crear un juego tipo Space 
     - Los aliens disparan con una cadencia configurable que aumenta con el nivel de juego
     - Caen bonus cada cierto tiempo con mejoras para la nave
     - Se aplican mejoras de velocidad de número de balas máximas y de vida extra
+    - Se aplican imágenes de los bonus
 
 ## Posibles Mejoras
-- Hacer seguimiento de los bonuses adquiridos y del tipo en stats
 - Implementar sonidos
 - Implementar animación de explosión cuando se derriba una nave enemiga
+- Implementar un pequeño texto de ("speed up" o "life up" o "bullets up") al recoger un bonus

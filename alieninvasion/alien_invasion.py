@@ -260,7 +260,6 @@ class AlienInvasion:
 
     def _create_bonus(self) -> None:
         """Crea un nuevo bonus de forma aleatoria"""
-        # TODO El bono de extra vida debería tener una probabilidad muy baja
         bonus_type = random.choice(self.settings.bonus_type_list)
         new_bonus = Bonus(self, type=bonus_type)
         self.bonuses.add(new_bonus)
@@ -318,6 +317,9 @@ class AlienInvasion:
             self.alien_bullets.empty()
             self.bonuses.empty()
 
+            # Printea las stats de bonus
+            ic(self.stats.bonus_stats)
+
             self._create_fleet()
             self.settings.increase_speed()
             # Cargamos otro fondo
@@ -352,6 +354,8 @@ class AlienInvasion:
         if collisions:
             # Sacamos el tipo de bonus que hemos cogido
             bonus_type = collisions[0].type
+            # Añadimos a la estadísticas
+            self.stats.bonus_stats[bonus_type] += 1
             # Se lo pasamos a la función para gestionar los bonus
             self.apply_bonus(bonus_type)
 
@@ -421,6 +425,9 @@ class AlienInvasion:
             self.bullets.empty()
             self.alien_bullets.empty()
             self.bonuses.empty()
+
+            # Quita los bonus
+            # TODO
 
             # Crea una flota nueva y centra la nave
             self._create_fleet()

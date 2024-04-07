@@ -22,7 +22,7 @@ class Bonus(Sprite):
     def __init__(
         self,
         ai_game: AlienInvasion,
-        type: Literal["extra_speed", "extra_bullet", "extra_life"] = "extra_speed",
+        type: Literal["extra_speed", "extra_bullets", "extra_life"] = "extra_speed",
     ) -> None:
         super().__init__()
         self.screen = ai_game.screen
@@ -34,11 +34,18 @@ class Bonus(Sprite):
         # Cargamos la imagen del bonus en función de su tipo
         # self.image = pygame.image.load(nave_alien)
 
-        self.image = pygame.Surface((50, 50))  # Un simple cuadrado para el ejemplo
-        self.image.fill((0, 255, 145))
+        if type == "extra_bullets":
+            # Carga la imagen
+            self.image = pygame.image.load("alieninvasion/images/bonus/bullet.png")
+        elif type == "extra_life":
+            self.image = pygame.image.load("alieninvasion/images/bonus/heart.png")
+        else:
+            self.image = pygame.Surface((50, 50))  # Un simple cuadrado para el ejemplo
+            self.image.fill((0, 255, 145))
 
         pos_x = random.randint(0, self.screen_rect.right - 50)
         self.rect = self.image.get_rect(topleft=(pos_x, 0))
+        self.screen.blit(self.image, self.rect)
 
     def update(self) -> None:
         """Mueve el bonus hacia abajo"""
