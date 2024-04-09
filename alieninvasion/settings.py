@@ -49,7 +49,7 @@ class Settings:
         )  # speed-bullets-life
 
         self.bonus_speed: float = 18
-        self.bonus_rate: float = 8_000  # Cadencia de caida de bonus en ms
+        self.bonus_rate: float = 40_000  # Cadencia de caida de bonus en ms
         self.extra_bullets: int = 10  # Balas adicionales durante un tiempo
         self.extra_speed: int = 10  # En cuanto aumenta la velocidad de la nave
 
@@ -64,7 +64,7 @@ class Settings:
         """Inicializa las configuraciones que cambian
         durante el juego al incrementar dificultad
         """
-        self.ship_speed: float = 6.5 + 5
+        self.ship_speed: float = 6.5
         self.bullet_speed: float = 10.0
         self.bullet_alien_speed: float = 9.0
         self.alien_speed: float = 7.0

@@ -39,9 +39,12 @@ class Bonus(Sprite):
             self.image = pygame.image.load("alieninvasion/images/bonus/bullet.png")
         elif type == "extra_life":
             self.image = pygame.image.load("alieninvasion/images/bonus/heart.png")
-        else:
-            self.image = pygame.Surface((50, 50))  # Un simple cuadrado para el ejemplo
-            self.image.fill((0, 255, 145))
+        elif type == "extra_speed":
+            self.image = pygame.image.load("alieninvasion/images/bonus/arrow.png")
+
+        # Caso genérico con cuadrado de color
+        # self.image = pygame.Surface((50, 50))  # Un simple cuadrado para el ejemplo
+        # self.image.fill((0, 255, 145))
 
         pos_x = random.randint(0, self.screen_rect.right - 50)
         self.rect = self.image.get_rect(topleft=(pos_x, 0))
