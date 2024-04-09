@@ -203,6 +203,21 @@ class AlienInvasion:
         # Muestra el texto
         self.screen.blit(game_over_image, game_over_rect)
 
+        # TODO Mostrar mensaje de stats
+        bonus_stats_msg = f"Extra speed: {self.stats.bonus_stats['extra_speed']}\
+        Extra bullets: {self.stats.bonus_stats['extra_bullets']} \
+        Extra life: {self.stats.bonus_stats['extra_life']}"
+        font = pygame.font.SysFont(self.settings.font, 70)
+        bonus_stats_image = font.render(
+            bonus_stats_msg, True, self.settings.game_over_color
+        )
+
+        bonus_stats_rect = bonus_stats_image.get_rect()
+        bonus_stats_rect.centerx = self.screen_width // 2
+        bonus_stats_rect.bottom = self.screen_height - 100
+
+        self.screen.blit(bonus_stats_image, bonus_stats_rect)
+
     def _exit_game(self) -> None:
         """Guarda el high score en db y cierra el juego"""
         # Guardamos el highscore

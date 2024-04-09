@@ -16,6 +16,8 @@ Proyecto del libro **Curso intensivo de Python** para crear un juego tipo Space 
     - Caen bonus cada cierto tiempo con mejoras para la nave
     - Se aplican mejoras de velocidad de número de balas máximas y de vida extra
     - Se aplican imágenes de los bonus
+- 09/04/2024
+    - Se añade un mensaje con las stats de bonus conseguidas en el game over
 
 ## Posibles Mejoras
 - Implementar sonidos
