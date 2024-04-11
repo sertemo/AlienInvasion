@@ -17,7 +17,6 @@ from scoreboard import Scoreboard
 from settings import Settings
 from ship import Ship
 
-# TODO : explorar pygame.mixer para sonidos
 # TODO : Cargar más fondos
 
 
@@ -29,6 +28,8 @@ class AlienInvasion:
     def __init__(self) -> None:
         """Inicializa el juego y crea recursos"""
         pygame.init()
+        pygame.mixer.init()
+
         self.clock = pygame.time.Clock()
         # Color de fondo
         self.settings = Settings()
@@ -70,6 +71,21 @@ class AlienInvasion:
 
         # Flag para indicar que el juego está activo
         self.game_active = False
+
+        # Sonidos
+        self.shoot_sound_ship = pygame.mixer.Sound(
+            "data/sounds/Futuristic Shotgun Single Shot.wav"
+        )
+        self.shoot_sound_ship.set_volume(0.3)
+        self.shoot_sound_alien_ship = pygame.mixer.Sound("data/sounds/Laser Shot.wav")
+        self.entry_music = pygame.mixer.Sound("data/sounds/entradilla.ogg")
+        self.level_up_sound = pygame.mixer.Sound("data/sounds/level_up.wav")
+        self.level_up_sound.set_volume(0.5)
+        self.explosion_sound = pygame.mixer.Sound("data/sounds/explosion.ogg")
+        self.explosion_sound.set_volume(0.4)
+        self.pick_bonus_sound = pygame.mixer.Sound("data/sounds/41_enginespeedup.wav")
+        self.falling_bonus_sound = pygame.mixer.Sound("data/sounds/16_falling.wav")
+        self.game_over_sound = pygame.mixer.Sound("data/sounds/GAMEOVER.wav")
 
         # Crea el botón de play
         self.play_button = Button(
@@ -149,6 +165,8 @@ class AlienInvasion:
 
     def _start_game(self) -> None:
         """Inicia el juego"""
+        # Reproduce entradilla
+        self.entry_music.play()
         # Restablece las estadisticas del juego
         self.stats.reset_stats()
         self.game_active = True
@@ -189,6 +207,7 @@ class AlienInvasion:
         """Muestra un mensaje de Game Over en la pantalla
         cuando se acaban las vidas
         """
+        # Reproduce el sonido
         game_over_msg = "Game Over"
         font = pygame.font.SysFont(self.settings.font, 150)
         game_over_image = font.render(
@@ -203,7 +222,6 @@ class AlienInvasion:
         # Muestra el texto
         self.screen.blit(game_over_image, game_over_rect)
 
-        # TODO Mostrar mensaje de stats
         bonus_stats_msg = f"Extra speed: {self.stats.bonus_stats['extra_speed']}\
         Extra bullets: {self.stats.bonus_stats['extra_bullets']} \
         Extra life: {self.stats.bonus_stats['extra_life']}"
@@ -265,6 +283,8 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+            # Reproducimos sonido de disparo
+            self.shoot_sound_ship.play()
 
     def _alien_fire_bullet(self) -> None:
         """Simula el disparo de un alien. Crea una nueva
@@ -272,12 +292,15 @@ class AlienInvasion:
         """
         new_bullet = Bullet(self, type="alien")
         self.alien_bullets.add(new_bullet)
+        self.shoot_sound_alien_ship.play()
 
     def _create_bonus(self) -> None:
         """Crea un nuevo bonus de forma aleatoria"""
         bonus_type = random.choice(self.settings.bonus_type_list)
         new_bonus = Bonus(self, type=bonus_type)
         self.bonuses.add(new_bonus)
+        # Reproduce el sonido
+        self.falling_bonus_sound.play()
 
     def _check_keyup_events(self, event: pygame.event.Event) -> None:
         """Responde a liberaciones de teclas
@@ -320,6 +343,8 @@ class AlienInvasion:
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
         if collisions:
+            # Reproducimos el sonido
+            self.explosion_sound.play()
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
@@ -327,6 +352,8 @@ class AlienInvasion:
 
         if not self.aliens:
             # Subimos de nivel
+            # Reproducimos musiquilla
+            self.level_up_sound.play()
             # Destruye las balas existentes y crea una flota nueva.
             self.bullets.empty()
             self.alien_bullets.empty()
@@ -367,6 +394,8 @@ class AlienInvasion:
         collisions = pygame.sprite.spritecollide(self.ship, self.bonuses, True)
 
         if collisions:
+            # Reproducimos el sonido
+            self.pick_bonus_sound.play()
             # Sacamos el tipo de bonus que hemos cogido
             bonus_type = collisions[0].type
             # Añadimos a la estadísticas
@@ -429,6 +458,8 @@ class AlienInvasion:
 
     def _ship_hit(self) -> None:
         """Responde al impacto de un alien en la nave"""
+        # Reproducimos sonido de explosion
+        self.explosion_sound.play()
         if self.stats.ships_left > 0:
             # Disminuye ships_left
             self.stats.ships_left -= 1
@@ -454,6 +485,7 @@ class AlienInvasion:
             self.game_active = False
             # Volvemos a hacer visible el ratón
             pygame.mouse.set_visible(True)
+            self.game_over_sound.play()
 
     def _check_aliens_bottom(self) -> None:
         """Comprueba si algún alien ha llegado al fondo de la pantalla"""

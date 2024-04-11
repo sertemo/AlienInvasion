@@ -29,7 +29,7 @@ class Settings:
         self.button_height = 80
 
         # Configuración de la nave
-        self.ship_limit: int = 3
+        self.ship_limit: int = 2
 
         # Configuración de las balas
         self.bullet_width = 4
