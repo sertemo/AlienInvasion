@@ -12,6 +12,7 @@ from alien import Alien
 from bonus import Bonus
 from bullet import Bullet
 from button import Button
+from explosion import Explosion
 from game_stats import GameStats
 from scoreboard import Scoreboard
 from settings import Settings
@@ -56,6 +57,7 @@ class AlienInvasion:
         self.alien_bullets: Any = pygame.sprite.Group()
         self.aliens: Any = pygame.sprite.Group()
         self.bonuses: Any = pygame.sprite.Group()
+        self.explosions: Any = pygame.sprite.Group()
 
         # Creamos el evento periódico de disparo de balas
         # De los aliens
@@ -346,6 +348,17 @@ class AlienInvasion:
             # Reproducimos el sonido
             self.explosion_sound.play()
             for aliens in collisions.values():
+                # TODO Meter aqui animación de Explosión
+                ic(aliens)
+                for alien in aliens:
+                    # Sacar la posición del alien
+                    center = alien.rect.center
+                    ic(center)
+                    # Creamos la explosión
+                    explosion = Explosion(center)
+                    self.explosions.add(explosion)
+                    # Añadimos a la lista
+
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
             self.sb.check_high_score()
@@ -559,6 +572,9 @@ class AlienInvasion:
 
         self.ship.blitme()
         self.aliens.draw(self.screen)
+        # Dibujamos las explosiones
+        self.explosions.update() # TODO Comprobarlo
+        self.explosions.draw() # TODO Comprobarlo
         # Dibujamos balas de la nave
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()

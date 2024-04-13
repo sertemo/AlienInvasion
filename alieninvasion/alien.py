@@ -41,8 +41,10 @@ class Alien(Sprite):
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
 
-        # Guarda la posición horzontal exacta del alien.
+        # Guarda la posición horizontal y vertical exacta del alien.
+        # Lo usaremos luego para la explosión
         self.x = self.rect.x
+        self.y = self.rect.y
 
     def check_edges(self) -> bool:
         """Devuelve True si el alienigena está en el borde
