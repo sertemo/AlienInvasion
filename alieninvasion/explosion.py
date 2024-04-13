@@ -9,8 +9,8 @@ if TYPE_CHECKING:  # Para evitar la dependencia circular. Siempre es False
 
 
 class Explosion(Sprite):
-    """Clase Sprite para mostrar una explosión
-    cuando una nave alienígena explota
+    """Clase para generar una explosión al reventar
+    una nave alienígena
 
     Parameters
     ----------
@@ -18,15 +18,28 @@ class Explosion(Sprite):
         _description_
     """
     def __init__(
-            self, center: tuple[int, int] # posición del alien
+            self,
+            ai_game: AlienInvasion,
+            center: tuple[int, int] # posición del alien
             ) -> None:
+        """inicializa las imágenes de la explosión
+
+        Parameters
+        ----------
+        ai_game : AlienInvasion
+            _description_
+        center : tuple[int, int]
+            _description_
+        """
         super().__init__()
+        self.settings = ai_game.settings
         self.images = [
-            pygame.image.load('explosion1.png').convert_alpha(),
-            pygame.image.load('explosion2.png').convert_alpha(),
-            pygame.image.load('explosion3.png').convert_alpha(),
-            pygame.image.load('explosion4.png').convert_alpha(),
-            pygame.image.load('explosion5.png').convert_alpha()
+            pygame.image.load(self.settings.explosion_path / 'ex1.png').convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / 'ex2.png').convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / 'ex3.png').convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / 'ex4.png').convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / 'ex5.png').convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / 'ex6.png').convert_alpha()
         ]
         self.current_frame = 0
         self.image = self.images[self.current_frame]

@@ -355,7 +355,7 @@ class AlienInvasion:
                     center = alien.rect.center
                     ic(center)
                     # Creamos la explosión
-                    explosion = Explosion(center)
+                    explosion = Explosion(self, center)
                     self.explosions.add(explosion)
                     # Añadimos a la lista
 
@@ -573,8 +573,8 @@ class AlienInvasion:
         self.ship.blitme()
         self.aliens.draw(self.screen)
         # Dibujamos las explosiones
-        self.explosions.update() # TODO Comprobarlo
-        self.explosions.draw() # TODO Comprobarlo
+        self.explosions.update()
+        self.explosions.draw(self.screen)
         # Dibujamos balas de la nave
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()

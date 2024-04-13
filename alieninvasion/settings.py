@@ -16,6 +16,7 @@ class Settings:
         self.bg_color = (130, 130, 130)
         self.bg_img_path = Path("alieninvasion/images/background")
         self.start_background = Path("alieninvasion/images/start_background.png")
+        self.explosion_path = Path("data/images/Explosion")
         self.fps = 60
 
         # Configuración de puntuación
