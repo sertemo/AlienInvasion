@@ -162,12 +162,18 @@ class AlienInvasion:
                     self._alien_fire_bullet()
             elif (event.type == self.FALL_EVENT) and self.game_active:
                 self._create_bonus()
-            elif (event.type == self.BULLET_BONUS_EVENT) and self.game_active and \
-                self.bonus_bullets_on:
+            elif (
+                (event.type == self.BULLET_BONUS_EVENT)
+                and self.game_active
+                and self.bonus_bullets_on
+            ):
                 # Revertimos el efecto del bono de las balas
                 self.end_bonus_bullets()
-            elif (event.type == self.SPEED_BONUS_EVENT) and self.game_active and \
-                self.bonus_speed_on:
+            elif (
+                (event.type == self.SPEED_BONUS_EVENT)
+                and self.game_active
+                and self.bonus_speed_on
+            ):
                 # Revertimos el efecto del bono de las balas
                 self.end_bonus_speed()
 
@@ -432,12 +438,12 @@ class AlienInvasion:
                 self.BULLET_BONUS_EVENT, 10_000, True
             )  # True dura solo 1 vez
             # Aplicamos la mejora
-            self._apply_extra_bullets()            
+            self._apply_extra_bullets()
         elif bonus_type == "extra_speed":
             self.SPEED_BONUS_EVENT = pygame.USEREVENT + 11
             pygame.time.set_timer(self.SPEED_BONUS_EVENT, 5000, True)
             # Aplicamos la mejora
-            self._apply_extra_speed()            
+            self._apply_extra_speed()
         elif bonus_type == "extra_life":
             self._apply_extra_life()
 

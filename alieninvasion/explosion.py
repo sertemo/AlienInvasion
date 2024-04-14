@@ -17,11 +17,10 @@ class Explosion(Sprite):
     Sprite : _type_
         _description_
     """
+
     def __init__(
-            self,
-            ai_game: AlienInvasion,
-            center: tuple[int, int] # posición del alien
-            ) -> None:
+        self, ai_game: AlienInvasion, center: tuple[int, int]  # posición del alien
+    ) -> None:
         """inicializa las imágenes de la explosión
 
         Parameters
@@ -34,15 +33,15 @@ class Explosion(Sprite):
         super().__init__()
         self.settings = ai_game.settings
         self.images = [
-            pygame.image.load(self.settings.explosion_path / 'ex1.png').convert_alpha(),
-            pygame.image.load(self.settings.explosion_path / 'ex2.png').convert_alpha(),
-            pygame.image.load(self.settings.explosion_path / 'ex3.png').convert_alpha(),
-            pygame.image.load(self.settings.explosion_path / 'ex4.png').convert_alpha(),
-            pygame.image.load(self.settings.explosion_path / 'ex5.png').convert_alpha(),
-            pygame.image.load(self.settings.explosion_path / 'ex6.png').convert_alpha(),
-            pygame.image.load(self.settings.explosion_path / 'ex7.png').convert_alpha(),
-            pygame.image.load(self.settings.explosion_path / 'ex8.png').convert_alpha(),
-            pygame.image.load(self.settings.explosion_path / 'ex9.png').convert_alpha()
+            pygame.image.load(self.settings.explosion_path / "ex1.png").convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / "ex2.png").convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / "ex3.png").convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / "ex4.png").convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / "ex5.png").convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / "ex6.png").convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / "ex7.png").convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / "ex8.png").convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / "ex9.png").convert_alpha(),
         ]
         self.current_frame = 0
         self.image = self.images[self.current_frame]
