@@ -20,7 +20,9 @@ Proyecto del libro **Curso intensivo de Python** para crear un juego tipo Space 
     - Se añade un mensaje con las stats de bonus conseguidas en el game over
 - 11/04/2024
     - Se añaden algunos sonidos
+- 14/04/2024
+    - Se añade animación de explosión
 
 ## Posibles Mejoras
-- Implementar animación de explosión cuando se derriba una nave enemiga
+- Mejorar la animación de la explosión haciendo que se desplace en la dirección de los aliens
 - Implementar un pequeño texto de ("speed up" o "life up" o "bullets up") al recoger un bonus

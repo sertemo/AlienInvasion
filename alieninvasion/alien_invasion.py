@@ -71,6 +71,10 @@ class AlienInvasion:
         self.SPEED_BONUS_EVENT: Union[None, int] = None
         self.BULLET_BONUS_EVENT: Union[None, int] = None
 
+        # Flag para saber si hay bonus activo
+        self.bonus_speed_on = False
+        self.bonus_bullets_on = False
+
         # Flag para indicar que el juego está activo
         self.game_active = False
 
@@ -158,10 +162,12 @@ class AlienInvasion:
                     self._alien_fire_bullet()
             elif (event.type == self.FALL_EVENT) and self.game_active:
                 self._create_bonus()
-            elif (event.type == self.BULLET_BONUS_EVENT) and self.game_active:
+            elif (event.type == self.BULLET_BONUS_EVENT) and self.game_active and \
+                self.bonus_bullets_on:
                 # Revertimos el efecto del bono de las balas
                 self.end_bonus_bullets()
-            elif (event.type == self.SPEED_BONUS_EVENT) and self.game_active:
+            elif (event.type == self.SPEED_BONUS_EVENT) and self.game_active and \
+                self.bonus_speed_on:
                 # Revertimos el efecto del bono de las balas
                 self.end_bonus_speed()
 
@@ -426,22 +432,26 @@ class AlienInvasion:
                 self.BULLET_BONUS_EVENT, 10_000, True
             )  # True dura solo 1 vez
             # Aplicamos la mejora
-            self._apply_extra_bullets()
+            self._apply_extra_bullets()            
         elif bonus_type == "extra_speed":
             self.SPEED_BONUS_EVENT = pygame.USEREVENT + 11
             pygame.time.set_timer(self.SPEED_BONUS_EVENT, 5000, True)
             # Aplicamos la mejora
-            self._apply_extra_speed()
+            self._apply_extra_speed()            
         elif bonus_type == "extra_life":
             self._apply_extra_life()
 
     def _apply_extra_speed(self) -> None:
         """Aplica el aumento de velocidad de la nave"""
         self.settings.ship_speed += self.settings.extra_speed
+        # Activamos la flag
+        self.bonus_speed_on = True
 
     def _apply_extra_bullets(self) -> None:
         """Aumenta el número de balas permitidas"""
         self.settings.bullets_allowed += self.settings.extra_bullets
+        # Activamos la flag
+        self.bonus_bullets_on = True
 
     def _apply_extra_life(self) -> None:
         """Aumenta el número de naves"""
@@ -452,10 +462,12 @@ class AlienInvasion:
     def end_bonus_bullets(self) -> None:
         """Revierte las mejores aplicadas con el bonus de las balas"""
         self.settings.bullets_allowed -= self.settings.extra_bullets
+        self.bonus_bullets_on = False
 
     def end_bonus_speed(self) -> None:
         """Revierte las mejores aplicadas con el bonus de las balas"""
         self.settings.ship_speed -= self.settings.extra_speed
+        self.bonus_speed_on = False
 
     def _check_alien_bullet_ship_collisions(self) -> None:
         """Response a las colisiones de las balas
@@ -481,9 +493,13 @@ class AlienInvasion:
             self.bullets.empty()
             self.alien_bullets.empty()
             self.bonuses.empty()
+            self.explosions.empty()
 
             # Quita los bonus
-            # TODO
+            if self.bonus_bullets_on:
+                self.end_bonus_bullets()
+            if self.bonus_speed_on:
+                self.end_bonus_speed()
 
             # Crea una flota nueva y centra la nave
             self._create_fleet()
