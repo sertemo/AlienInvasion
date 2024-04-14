@@ -348,12 +348,9 @@ class AlienInvasion:
             # Reproducimos el sonido
             self.explosion_sound.play()
             for aliens in collisions.values():
-                # TODO Meter aqui animación de Explosión
-                ic(aliens)
                 for alien in aliens:
                     # Sacar la posición del alien
                     center = alien.rect.center
-                    ic(center)
                     # Creamos la explosión
                     explosion = Explosion(self, center)
                     self.explosions.add(explosion)

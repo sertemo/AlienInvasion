@@ -39,12 +39,15 @@ class Explosion(Sprite):
             pygame.image.load(self.settings.explosion_path / 'ex3.png').convert_alpha(),
             pygame.image.load(self.settings.explosion_path / 'ex4.png').convert_alpha(),
             pygame.image.load(self.settings.explosion_path / 'ex5.png').convert_alpha(),
-            pygame.image.load(self.settings.explosion_path / 'ex6.png').convert_alpha()
+            pygame.image.load(self.settings.explosion_path / 'ex6.png').convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / 'ex7.png').convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / 'ex8.png').convert_alpha(),
+            pygame.image.load(self.settings.explosion_path / 'ex9.png').convert_alpha()
         ]
         self.current_frame = 0
         self.image = self.images[self.current_frame]
         self.rect = self.image.get_rect(center=center)
-        self.frame_rate = 3  # Controla la velocidad de la animación
+        self.frame_rate = 2  # Controla la velocidad de la animación
 
     def update(self):
         self.current_frame += 1
